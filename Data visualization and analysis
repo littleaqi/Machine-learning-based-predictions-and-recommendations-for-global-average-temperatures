@@ -1,0 +1,62 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 读取数据
+data = pd.read_csv('GLOBALTEMPERATURES.CSV')
+
+# 选择需要的列并处理缺失值
+data = data[['dt', 'LandAverageTemperature', 'LandMaxTemperature', 'LandMinTemperature', 'LandAndOceanAverageTemperature']].dropna()
+
+# 将日期列转换为 datetime 类型
+data['dt'] = pd.to_datetime(data['dt'])
+
+# 设置日期列为索引
+data.set_index('dt', inplace=True)
+
+# 绘制折线图
+plt.figure(figsize=(14, 7))
+plt.plot(data.index, data['LandAverageTemperature'], label='Land Average Temperature')
+plt.plot(data.index, data['LandMaxTemperature'], label='Land Max Temperature')
+plt.plot(data.index, data['LandMinTemperature'], label='Land Min Temperature')
+plt.plot(data.index, data['LandAndOceanAverageTemperature'], label='Land and Ocean Average Temperature')
+plt.title('Temperature Trends Over Time')
+plt.xlabel('Year')
+plt.ylabel('Temperature (°C)')
+plt.legend()
+plt.show()
+
+# 绘制直方图
+plt.figure(figsize=(14, 7))
+data['LandAverageTemperature'].hist(bins=50, alpha=0.7, label='Land Average Temperature')
+data['LandMaxTemperature'].hist(bins=50, alpha=0.7, label='Land Max Temperature')
+data['LandMinTemperature'].hist(bins=50, alpha=0.7, label='Land Min Temperature')
+data['LandAndOceanAverageTemperature'].hist(bins=50, alpha=0.7, label='Land and Ocean Average Temperature')
+plt.title('Temperature Distribution')
+plt.xlabel('Temperature (°C)')
+plt.ylabel('Frequency')
+plt.legend()
+plt.show()
+
+# 绘制箱线图
+plt.figure(figsize=(14, 7))
+sns.boxplot(data=data[['LandAverageTemperature', 'LandMaxTemperature', 'LandMinTemperature', 'LandAndOceanAverageTemperature']])
+plt.title('Temperature Boxplot')
+plt.xlabel('Temperature Type')
+plt.ylabel('Temperature (°C)')
+plt.show()
+
+# 绘制散点图
+plt.figure(figsize=(14, 7))
+plt.scatter(data['LandAverageTemperature'], data['LandAndOceanAverageTemperature'], alpha=0.5)
+plt.title('Land Average Temperature vs Land and Ocean Average Temperature')
+plt.xlabel('Land Average Temperature (°C)')
+plt.ylabel('Land and Ocean Average Temperature (°C)')
+plt.show()
+
+# 绘制热力图
+plt.figure(figsize=(14, 7))
+sns.heatmap(data.corr(), annot=True, cmap='coolwarm', vmin=-1, vmax=1)
+plt.title('Correlation Heatmap')
+plt.show()
